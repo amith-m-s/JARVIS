@@ -32,6 +32,6 @@ A powerful Python-based voice-enabled assistant inspired by J.A.R.V.I.S., combin
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/your-username/jarvis-ai.git
+git clone https://github.com/amith-m-s/JARVIS.git
 cd jarvis-ai
 pip install openai pyttsx3 requests wikipedia beautifulsoup4
