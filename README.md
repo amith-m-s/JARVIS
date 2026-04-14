@@ -1,37 +1,84 @@
-# 🧠 JARVIS – AI Desktop Assistant
+# 🤖 JARVIS AI Assistant
 
-A powerful Python-based voice-enabled assistant inspired by J.A.R.V.I.S., combining system control, web automation, and ChatGPT-level intelligence.
+An AI-powered desktop assistant capable of executing system commands, automating workflows, and interacting via natural language.
 
 ---
 
-## 🚀 Features
+## 🚀 Overview
 
-- 💬 Conversational AI (powered by OpenAI API)
-- 🔊 Text-to-Speech responses
-- 🌦️ Live Weather Lookup
-- 📚 Wikipedia Search & Summary
-- 🌐 Smart Web Browsing
-- 🖥️ System Control (Notepad, Calculator, File Explorer)
-- 🧠 Short-term Memory Context
-- ⚡ Fast, lightweight, and extensible
+JARVIS is designed as a **system-level AI assistant**, not just a chatbot.
+
+It integrates:
+
+* Natural language processing
+* Command execution
+* Workflow automation
+
+---
+
+## ⚙️ Core Features
+
+* Natural language command processing
+* System-level task execution
+* Modular command architecture
+* Extensible automation workflows
+
+---
+
+## 🏗️ Architecture
+
+```text
+User Input
+   │
+   ▼
+NLP Processing
+   │
+   ▼
+Intent Recognition
+   │
+   ▼
+Command Dispatcher
+   │
+   ▼
+Execution Layer (OS / APIs)
+```
+
+---
+
+## 🧠 How It Works
+
+* Parses user input using NLP
+* Maps intent to predefined commands
+* Executes system-level operations
+* Returns feedback to user
+
+---
+
+## 🚧 Challenges & Solutions
+
+* Mapping flexible language → fixed commands
+  → solved using intent-based routing
+
+* Handling system-level execution safely
+  → restricted and validated command layer
+
+* Making system extensible
+  → modular command design
 
 ---
 
 ## 🛠️ Tech Stack
 
-- Python 3.x
-- openai
-- pyttsx3
-- requests
-- wikipedia
-- webbrowser
-- subprocess
+* Python
+* OS / subprocess
+* NLP logic
 
 ---
 
-## 📦 Installation
+## 🔮 Future Improvements
 
-```bash
-git clone https://github.com/amith-m-s/JARVIS.git
-cd jarvis-ai
-pip install openai pyttsx3 requests wikipedia beautifulsoup4
+* Voice integration
+* LLM-based understanding
+* Plugin system for extensibility
+
+---
