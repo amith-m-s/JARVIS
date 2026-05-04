@@ -1,0 +1,7 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*.pyc
+.env
+.venv/
+data/memory.json
+__pycache__/
+python-3.14.0-amd64.exe

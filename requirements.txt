@@ -1,0 +1,7 @@
+requests
+wikipedia
+rich
+python-dotenv
+rapidfuzz
+pyttsx3
+SpeechRecognition
