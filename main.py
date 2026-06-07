@@ -1,6 +1,8 @@
+import tkinter as tk
 from jarvis.core.agent import Assistant
 from jarvis.services.tts import Speaker
 from jarvis.services.voice import VoiceInput
+from jarvis.services.gui import JarvisGUI
 from jarvis.utils.parser import normalize_text
 
 
@@ -8,8 +10,9 @@ def choose_mode() -> str:
     print("\n1. Voice")
     print("2. Text")
     print("3. Hybrid")
+    print("4. GUI Dashboard")
     choice = input("Select: ").strip()
-    return choice if choice in {"1", "2", "3"} else "2"
+    return choice if choice in {"1", "2", "3", "4"} else "2"
 
 
 def get_input(mode: str, voice: VoiceInput) -> str | None:
@@ -41,6 +44,16 @@ def main():
     voice = VoiceInput()
 
     mode = choose_mode()
+    if mode == "4":
+        root = tk.Tk()
+        _ = JarvisGUI(root, assistant, speaker, voice)
+        root.mainloop()
+        return
+
+    if mode == "1" and not voice.enabled:
+        speaker.say("Voice input is not available on this device. Falling back to text mode.")
+        mode = "2"
+
     speaker.say("Jarvis ready.")
 
     while True:
@@ -61,3 +74,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -47,11 +47,19 @@ class LocalBrain:
                 timeout=60,
             )
             if not response.ok:
+                from jarvis.utils import logger
+                logger.warning(
+                    f"Ollama returned not ok status: {response.status_code}. "
+                    f"Response: {response.text}. "
+                    f"Ensure you have pulled the model '{Config.OLLAMA_MODEL}' using 'ollama pull {Config.OLLAMA_MODEL}'."
+                )
                 return None
 
             data = response.json()
             message = data.get("message", {})
             content = message.get("content", "").strip()
             return content or None
-        except Exception:
+        except Exception as e:
+            from jarvis.utils import logger
+            logger.error(f"Ollama connection error: {e}", exc_info=True)
             return None
