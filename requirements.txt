@@ -5,3 +5,5 @@ python-dotenv
 rapidfuzz
 pyttsx3
 SpeechRecognition
+tzdata
+psutil

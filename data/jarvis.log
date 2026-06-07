@@ -1,0 +1,95 @@
+2026-05-27 22:35:34,595 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-05-27 22:35:54,194 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-05-27 22:36:10,306 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-05-27 22:49:43,495 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-05-27 22:50:29,952 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-05-27 22:50:40,426 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-06-07 21:36:34,422 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-06-07 22:09:06,632 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-06-07 22:17:35,404 - jarvis - ERROR - Wikipedia search error: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\models.py", line 976, in json
+    return complexjson.loads(self.text, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\Amith\OneDrive\Desktop\jarvis-ai\jarvis\tools\wiki.py", line 19, in execute
+    summary = wikipedia.summary(topic, sentences=2, auto_suggest=True, redirect=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\util.py", line 28, in __call__
+    ret = self._cache[key] = self.fn(*args, **kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\wikipedia.py", line 231, in summary
+    page_info = page(title, auto_suggest=auto_suggest, redirect=redirect)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\wikipedia.py", line 270, in page
+    results, suggestion = search(title, results=1, suggestion=True)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\util.py", line 28, in __call__
+    ret = self._cache[key] = self.fn(*args, **kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\wikipedia.py", line 103, in search
+    raw_results = _wiki_request(search_params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\wikipedia.py", line 742, in _wiki_request
+    return r.json()
+           ^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\models.py", line 980, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2026-06-07 22:18:08,168 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
+2026-06-07 22:19:14,779 - jarvis - ERROR - Wikipedia search error: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\models.py", line 976, in json
+    return complexjson.loads(self.text, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Amith\OneDrive\Desktop\jarvis-ai\jarvis\tools\wiki.py", line 19, in execute
+    summary = wikipedia.summary(topic, sentences=2, auto_suggest=True, redirect=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\util.py", line 28, in __call__
+    ret = self._cache[key] = self.fn(*args, **kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\wikipedia.py", line 231, in summary
+    page_info = page(title, auto_suggest=auto_suggest, redirect=redirect)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\wikipedia.py", line 270, in page
+    results, suggestion = search(title, results=1, suggestion=True)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\util.py", line 28, in __call__
+    ret = self._cache[key] = self.fn(*args, **kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\wikipedia.py", line 103, in search
+    raw_results = _wiki_request(search_params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\wikipedia\wikipedia.py", line 742, in _wiki_request
+    return r.json()
+           ^^^^^^^^
+  File "C:\Users\Amith\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\models.py", line 980, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2026-06-07 22:19:59,781 - jarvis - WARNING - Ollama returned not ok status: 404. Response: {"error":"model 'llama3' not found"}. Ensure you have pulled the model 'llama3' using 'ollama pull llama3'.
+2026-06-07 22:20:10,360 - jarvis - WARNING - Input text truncated due to length > 1000 characters.
