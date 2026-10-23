@@ -1,6 +1,8 @@
 import unittest
 import os
 import sys
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
 
 # Ensure project root is in sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -79,6 +81,26 @@ class TestJarvisTools(unittest.TestCase):
         self.assertIn("System Status:", res.text)
         self.assertIn("CPU Usage:", res.text)
         self.assertIn("RAM Usage:", res.text)
+
+    def test_system_stats_uses_platform_root_for_disk_usage(self):
+        disk = SimpleNamespace(total=10 * 1024**3, used=4 * 1024**3, percent=40)
+        memory = SimpleNamespace(total=8 * 1024**3, used=2 * 1024**3, percent=25)
+        disk_usage = Mock(return_value=disk)
+        fake_psutil = SimpleNamespace(
+            cpu_percent=Mock(return_value=12.5),
+            virtual_memory=Mock(return_value=memory),
+            disk_usage=disk_usage,
+        )
+
+        with (
+            patch.dict(sys.modules, {"psutil": fake_psutil}),
+            patch("jarvis.tools.system.platform.system", return_value="Linux"),
+            patch("jarvis.tools.system.os.path.abspath", return_value="/"),
+        ):
+            result = SystemTool().execute({"input": "cpu usage", "memory": self.memory})
+
+        disk_usage.assert_called_once_with("/")
+        self.assertIn("Disk (/): 40%", result.text)
 
 class TestJarvisIntent(unittest.TestCase):
     def test_match_intent(self):
