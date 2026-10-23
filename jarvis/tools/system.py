@@ -22,8 +22,9 @@ class SystemTool(Tool):
                 import psutil
                 cpu = psutil.cpu_percent(interval=0.1)
                 mem = psutil.virtual_memory()
-                drive = os.path.splitdrive(os.getcwd())[0] or "C:"
-                disk = psutil.disk_usage(drive + "\\")
+                disk_path = os.path.abspath(os.sep)
+                drive = os.path.splitdrive(disk_path)[0] or disk_path
+                disk = psutil.disk_usage(disk_path)
 
                 mem_total = mem.total / (1024**3)
                 mem_used = mem.used / (1024**3)
