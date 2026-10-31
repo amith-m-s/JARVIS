@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 from jarvis.tools.base import Tool, ToolResult
@@ -75,8 +75,10 @@ class TimeTool(Tool):
             city1, tz1 = found_zones[0]
             city2, tz2 = found_zones[1]
             try:
-                t1 = datetime.now(ZoneInfo(tz1))
-                t2 = datetime.now(ZoneInfo(tz2))
+                # Use one UTC instant so a DST transition cannot occur between reads.
+                instant = datetime.now(timezone.utc)
+                t1 = instant.astimezone(ZoneInfo(tz1))
+                t2 = instant.astimezone(ZoneInfo(tz2))
                 diff_seconds = t1.utcoffset().total_seconds() - t2.utcoffset().total_seconds()
                 diff_hours = diff_seconds / 3600.0
 
