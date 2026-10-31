@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime, timezone
 import os
 import sys
 from types import SimpleNamespace
@@ -72,7 +73,29 @@ class TestJarvisTools(unittest.TestCase):
 
         # Time difference query
         res = time_tool.execute({"input": "time difference between Tokyo and New York", "memory": self.memory})
-        self.assertIn("Tokyo is 13 hours ahead of New York", res.text)
+        self.assertIn("Tokyo is ", res.text)
+        self.assertIn(" ahead of New York", res.text)
+
+
+    def test_time_difference_accounts_for_daylight_saving_time(self):
+        cases = (
+            (datetime(2026, 1, 15, 12, tzinfo=timezone.utc), "14 hours"),
+            (datetime(2026, 7, 15, 12, tzinfo=timezone.utc), "13 hours"),
+        )
+
+        for instant, expected_difference in cases:
+            with self.subTest(expected_difference=expected_difference):
+                with patch("jarvis.tools.time_tool.datetime") as mocked_datetime:
+                    mocked_datetime.now.return_value = instant
+                    result = TimeTool().execute({
+                        "input": "time difference between Tokyo and New York",
+                        "memory": self.memory,
+                    })
+
+                self.assertIn(
+                    f"Tokyo is {expected_difference} ahead of New York",
+                    result.text,
+                )
 
     def test_system_tool(self):
         system = SystemTool()
