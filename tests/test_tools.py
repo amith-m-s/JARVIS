@@ -112,6 +112,15 @@ class TestJarvisTools(unittest.TestCase):
 
         self.assertIn("8 hours behind", result.text)
 
+    def test_time_difference_mixes_literal_timezone_and_city_alias(self):
+        result = TimeTool().execute({
+            "input": "time difference between America/Port-au-Prince and Tokyo",
+            "memory": self.memory,
+        })
+
+        self.assertIn("America/Port-Au-Prince is ", result.text)
+        self.assertIn(" Tokyo (", result.text)
+
     def test_system_tool(self):
         system = SystemTool()
         # Hardware stats query
