@@ -55,8 +55,8 @@ class TimeTool(Tool):
 
         found_zones = []
 
-        # 1. Look for literal timezone pattern (e.g. Europe/London)
-        tz_pattern = re.compile(r"\b[a-zA-Z_]+/[a-zA-Z_]+(?:/[a-zA-Z_]+)?\b")
+        # 1. Look for literal IANA timezone IDs (including signs and hyphens).
+        tz_pattern = re.compile(r"\b[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)+\b")
         matches = tz_pattern.findall(text)
         for match in matches:
             try:
