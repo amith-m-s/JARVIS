@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from datetime import datetime, timezone
-from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo, available_timezones
 
 from jarvis.tools.base import Tool, ToolResult
 from jarvis.utils.parser import normalize_text
@@ -46,6 +46,9 @@ CITIES_TZ = {
     "mst": "America/Denver",
 }
 
+# normalize_text lowercases user input, while ZoneInfo keys are case-sensitive.
+IANA_TIMEZONE_KEYS = {name.casefold(): name for name in available_timezones()}
+
 
 class TimeTool(Tool):
     name = "time"
@@ -57,19 +60,24 @@ class TimeTool(Tool):
 
         # 1. Look for literal IANA timezone IDs (including signs and hyphens).
         tz_pattern = re.compile(r"\b[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)+\b")
-        matches = tz_pattern.findall(text)
-        for match in matches:
-            try:
-                ZoneInfo(match)  # Test if valid
-                found_zones.append((match, match))
-            except Exception:
-                pass
+        literal_matches = list(tz_pattern.finditer(text))
+        literal_spans = [match.span() for match in literal_matches]
 
-        # 2. Look for cities/aliases in text
+        for match in literal_matches:
+            timezone_key = IANA_TIMEZONE_KEYS.get(match.group().casefold())
+            if timezone_key is not None:
+                found_zones.append((match.group(), timezone_key))
+
+        # 2. Look for city aliases, ignoring occurrences inside literal timezone IDs.
         for city, tz_key in CITIES_TZ.items():
-            if re.search(rf"\b{city}\b", text):
+            city_pattern = re.compile(rf"\b{re.escape(city)}\b")
+            for city_match in city_pattern.finditer(text):
+                start, end = city_match.span()
+                if any(start >= zone_start and end <= zone_end for zone_start, zone_end in literal_spans):
+                    continue
                 if not any(z[1] == tz_key for z in found_zones):
                     found_zones.append((city, tz_key))
+                break
 
         if len(found_zones) >= 2:
             city1, tz1 = found_zones[0]
