@@ -76,7 +76,6 @@ class TestJarvisTools(unittest.TestCase):
         self.assertIn("Tokyo is ", res.text)
         self.assertIn(" ahead of New York", res.text)
 
-
     def test_time_difference_accounts_for_daylight_saving_time(self):
         cases = (
             (datetime(2026, 1, 15, 12, tzinfo=timezone.utc), "14 hours"),
@@ -96,6 +95,31 @@ class TestJarvisTools(unittest.TestCase):
                     f"Tokyo is {expected_difference} ahead of New York",
                     result.text,
                 )
+
+    def test_time_tool_accepts_hyphenated_iana_timezone(self):
+        result = TimeTool().execute({
+            "input": "time in America/Port-au-Prince",
+            "memory": self.memory,
+        })
+
+        self.assertIn("Timezone: America/Port-au-Prince", result.text)
+
+    def test_time_difference_accepts_etc_gmt_sign_suffixes(self):
+        result = TimeTool().execute({
+            "input": "time difference between Etc/GMT+5 and Etc/GMT-3",
+            "memory": self.memory,
+        })
+
+        self.assertIn("8 hours behind", result.text)
+
+    def test_time_difference_mixes_literal_timezone_and_city_alias(self):
+        result = TimeTool().execute({
+            "input": "time difference between America/Port-au-Prince and Tokyo",
+            "memory": self.memory,
+        })
+
+        self.assertIn("America/Port-Au-Prince is ", result.text)
+        self.assertIn(" Tokyo (", result.text)
 
     def test_system_tool(self):
         system = SystemTool()
@@ -125,12 +149,13 @@ class TestJarvisTools(unittest.TestCase):
         disk_usage.assert_called_once_with("/")
         self.assertIn("Disk (/): 40%", result.text)
 
+
 class TestJarvisIntent(unittest.TestCase):
     def test_match_intent(self):
         # Verify that "instagram" does not trigger "system" intent due to "ram" substring matching
         self.assertEqual(match_intent("what is instagram"), "knowledge")
         self.assertEqual(match_intent("samsung"), "knowledge")
-        
+
         # Verify valid system triggers match correctly
         self.assertEqual(match_intent("cpu usage"), "system")
         self.assertEqual(match_intent("ram status"), "system")
