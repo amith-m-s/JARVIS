@@ -8,6 +8,38 @@ import re
 from jarvis.tools.base import Tool, ToolResult
 from jarvis.utils.parser import looks_like_math, extract_expression
 
+_MAX_AST_NODES = 64
+_MAX_AST_DEPTH = 16
+_MAX_INTEGER_BITS = 4096
+_MAX_POWER_EXPONENT = 1000
+
+
+class ExpressionTooComplexError(ValueError):
+    """Raised when an expression exceeds the calculator's resource budget."""
+
+
+def _validate_expression_tree(node):
+    pending = [(node, 1)]
+    visited = 0
+
+    while pending:
+        current, depth = pending.pop()
+        visited += 1
+        if visited > _MAX_AST_NODES or depth > _MAX_AST_DEPTH:
+            raise ExpressionTooComplexError("Expression exceeds the complexity limit.")
+        pending.extend((child, depth + 1) for child in ast.iter_child_nodes(current))
+
+
+def _check_numeric_size(value):
+    if (
+        isinstance(value, int)
+        and not isinstance(value, bool)
+        and value.bit_length() > _MAX_INTEGER_BITS
+    ):
+        raise OverflowError("Integer result exceeds the calculator limit.")
+    return value
+
+
 
 
 # =========================
@@ -93,12 +125,12 @@ def safe_eval(node):
     # numbers
     if isinstance(node, ast.Constant):
         if isinstance(node.value, (int, float)):
-            return node.value
+            return _check_numeric_size(node.value)
         raise ValueError("Invalid constant")
 
     # compatibility
     if isinstance(node, ast.Num):
-        return node.n
+        return _check_numeric_size(node.n)
 
     # binary operators
     if isinstance(node, ast.BinOp):
@@ -109,7 +141,20 @@ def safe_eval(node):
         left = safe_eval(node.left)
         right = safe_eval(node.right)
 
-        return _ALLOWED_OPERATORS[type(node.op)](left, right)
+        if isinstance(node.op, ast.Pow):
+            if abs(right) > _MAX_POWER_EXPONENT:
+                raise OverflowError("Exponent exceeds the calculator limit.")
+            if (
+                isinstance(left, int)
+                and isinstance(right, int)
+                and right > 0
+                and abs(left) > 1
+                and (abs(left).bit_length() - 1) * right + 1 > _MAX_INTEGER_BITS
+            ):
+                raise OverflowError("Power result exceeds the calculator limit.")
+
+        result = _ALLOWED_OPERATORS[type(node.op)](left, right)
+        return _check_numeric_size(result)
 
     # unary operators
     if isinstance(node, ast.UnaryOp):
@@ -119,7 +164,7 @@ def safe_eval(node):
 
         operand = safe_eval(node.operand)
 
-        return _ALLOWED_OPERATORS[type(node.op)](operand)
+        return _check_numeric_size(_ALLOWED_OPERATORS[type(node.op)](operand))
 
     # constants
     if isinstance(node, ast.Name):
@@ -144,7 +189,7 @@ def safe_eval(node):
 
         args = [safe_eval(arg) for arg in node.args]
 
-        return func(*args)
+        return _check_numeric_size(func(*args))
 
     raise ValueError("Unsupported expression")
 
@@ -172,6 +217,7 @@ class CalculatorTool(Tool):
 
         try:
             tree = ast.parse(expr, mode="eval")
+            _validate_expression_tree(tree)
 
             result = safe_eval(tree.body)
 
@@ -184,6 +230,9 @@ class CalculatorTool(Tool):
                     result = round(result, 10)
 
             return ToolResult(str(result))
+
+        except ExpressionTooComplexError:
+            return ToolResult("The expression is too complex.")
 
         except ZeroDivisionError:
             return ToolResult("Division by zero is not allowed.")
