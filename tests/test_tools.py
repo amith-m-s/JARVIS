@@ -75,6 +75,13 @@ class TestJarvisTools(unittest.TestCase):
         result = calc.execute({"input": "10**1000**1000", "memory": self.memory})
         self.assertEqual(result.text, "The number is too large.")
 
+        # Each operand is allowed, but their product exceeds the integer bit budget.
+        result = calc.execute({
+            "input": "10**1000 * 10**1000",
+            "memory": self.memory,
+        })
+        self.assertEqual(result.text, "The number is too large.")
+
     def test_calculator_preserves_reasonable_large_integer_results(self):
         result = CalculatorTool().execute({
             "input": "2**100",
