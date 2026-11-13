@@ -65,6 +65,42 @@ class TestJarvisTools(unittest.TestCase):
         res = calc.execute({"input": "1/0", "memory": self.memory})
         self.assertEqual(res.text, "Division by zero is not allowed.")
 
+    def test_calculator_rejects_excessive_exponents(self):
+        calc = CalculatorTool()
+
+        result = calc.execute({"input": "2**1001", "memory": self.memory})
+        self.assertEqual(result.text, "The number is too large.")
+
+        # The inner power is rejected before it can become the outer exponent.
+        result = calc.execute({"input": "10**1000**1000", "memory": self.memory})
+        self.assertEqual(result.text, "The number is too large.")
+
+    def test_calculator_preserves_reasonable_large_integer_results(self):
+        result = CalculatorTool().execute({
+            "input": "2**100",
+            "memory": self.memory,
+        })
+
+        self.assertEqual(result.text, str(2**100))
+
+    def test_calculator_rejects_expressions_with_too_many_ast_nodes(self):
+        expression = " + ".join(["1"] * 30)
+        result = CalculatorTool().execute({
+            "input": expression,
+            "memory": self.memory,
+        })
+
+        self.assertEqual(result.text, "The expression is too complex.")
+
+    def test_calculator_rejects_excessive_ast_depth(self):
+        expression = "+" * 20 + "1"
+        result = CalculatorTool().execute({
+            "input": expression,
+            "memory": self.memory,
+        })
+
+        self.assertEqual(result.text, "The expression is too complex.")
+
     def test_time_tool(self):
         time_tool = TimeTool()
         # Single timezone query
