@@ -85,7 +85,7 @@ def extract_topic(text: str) -> str:
 
 
 MATH_ONLY = re.compile(r"^[\d\s\+\-\*\/\%\^\(\)\.a-zA-Z]+$")
-MATH_FUNCS = {"sin", "cos", "tan", "sqrt", "log", "log10", "exp", "radians", "degrees", "pi", "e"}
+MATH_FUNCS = {"sin", "cos", "tan", "sqrt", "log", "log10", "exp", "radians", "degrees", "factorial", "pi", "e"}
 
 
 def looks_like_math(text: str) -> bool:
