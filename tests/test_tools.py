@@ -1,3 +1,4 @@
+import math
 import unittest
 from datetime import datetime, timezone
 import os
@@ -107,6 +108,51 @@ class TestJarvisTools(unittest.TestCase):
         })
 
         self.assertEqual(result.text, "The expression is too complex.")
+
+    def test_calculator_accepts_factorial_within_integer_budget(self):
+        result = CalculatorTool().execute({
+            "input": "factorial(536)",
+            "memory": self.memory,
+        })
+
+        expected = str(math.factorial(536))
+        self.assertEqual(result.text, expected)
+        self.assertLessEqual(math.factorial(536).bit_length(), 4096)
+
+    def test_calculator_rejects_factorial_above_budget_before_evaluation(self):
+        with patch("jarvis.tools.calculator.math.factorial") as factorial:
+            result = CalculatorTool().execute({
+                "input": "factorial(537)",
+                "memory": self.memory,
+            })
+
+        self.assertEqual(result.text, "The number is too large.")
+        factorial.assert_not_called()
+
+    def test_calculator_rejects_unbounded_factorial_arguments_before_evaluation(self):
+        with patch("jarvis.tools.calculator.math.factorial") as factorial:
+            result = CalculatorTool().execute({
+                "input": "factorial(999999999)",
+                "memory": self.memory,
+            })
+
+        self.assertEqual(result.text, "The number is too large.")
+        factorial.assert_not_called()
+
+    def test_calculator_rejects_negative_and_non_integer_factorial_arguments(self):
+        calc = CalculatorTool()
+
+        negative = calc.execute({
+            "input": "factorial(-1)",
+            "memory": self.memory,
+        })
+        fractional = calc.execute({
+            "input": "factorial(5.5)",
+            "memory": self.memory,
+        })
+
+        self.assertEqual(negative.text, "I could not calculate that.")
+        self.assertEqual(fractional.text, "I could not calculate that.")
 
     def test_time_tool(self):
         time_tool = TimeTool()
