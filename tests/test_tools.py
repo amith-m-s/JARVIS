@@ -38,11 +38,13 @@ class TestJarvisParser(unittest.TestCase):
         self.assertTrue(looks_like_math("2+2"))
         self.assertTrue(looks_like_math("sqrt(16)"))
         self.assertTrue(looks_like_math("calculate sin(pi/2)"))
+        self.assertTrue(looks_like_math("factorial(5)"))
         self.assertFalse(looks_like_math("what is the weather in Tokyo"))
 
     def test_extract_expression(self):
         self.assertEqual(extract_expression("calculate 2+2"), "2+2")
         self.assertEqual(extract_expression("solve sin(pi/2)"), "sin(pi/2)")
+        self.assertEqual(extract_expression("calculate factorial(5)"), "factorial(5)")
         self.assertEqual(extract_expression("random text"), "")
 
 
