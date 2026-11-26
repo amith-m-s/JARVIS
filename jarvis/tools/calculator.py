@@ -12,6 +12,8 @@ _MAX_AST_NODES = 64
 _MAX_AST_DEPTH = 16
 _MAX_INTEGER_BITS = 4096
 _MAX_POWER_EXPONENT = 1000
+# 536! is the largest factorial result that fits within the integer bit budget.
+_MAX_FACTORIAL_ARGUMENT = 536
 
 
 class ExpressionTooComplexError(ValueError):
@@ -40,6 +42,15 @@ def _check_numeric_size(value):
     return value
 
 
+def _bounded_factorial(value):
+    """Evaluate factorial only when its argument and result stay bounded."""
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError("factorial() requires an integer")
+    if value < 0:
+        raise ValueError("factorial() requires a non-negative integer")
+    if value > _MAX_FACTORIAL_ARGUMENT:
+        raise OverflowError("Factorial result exceeds the calculator limit.")
+    return math.factorial(value)
 
 
 # =========================
@@ -88,7 +99,7 @@ _MATH_FUNCTIONS = {
     "floor": math.floor,
     "fabs": math.fabs,
 
-    "factorial": math.factorial,
+    "factorial": _bounded_factorial,
 
     "degrees": math.degrees,
     "radians": math.radians,
@@ -112,9 +123,6 @@ _MATH_CONSTANTS = {
     "tau": math.tau,
     "inf": math.inf,
 }
-
-
-
 
 
 # =========================
